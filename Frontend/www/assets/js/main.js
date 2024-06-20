@@ -271,6 +271,11 @@ function initialiseCart() {
   //TODO: ...
   clearCartButton.onclick = clearCart;
 
+  const savedCart = localStorage.getItem('cart');
+  if (savedCart) {
+    Cart = JSON.parse(savedCart);
+  }
+
   updateCart();
 }
 
@@ -328,6 +333,9 @@ function updateCart() {
   }
 
   Cart.forEach(showOnePizzaInCart);
+
+  // Save cart to local storage
+  localStorage.setItem('cart', JSON.stringify(Cart));
 }
 
 exports.removeFromCart = removeFromCart;
