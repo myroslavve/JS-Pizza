@@ -176,8 +176,9 @@ main {
       margin: 0;
     }
 
-    a {
+    span.clear {
       color: gray;
+      cursor: pointer;
     }
   }
 
@@ -201,11 +202,14 @@ main {
         display: flex;
         flex-direction: column;
         gap: 10px;
+        max-width: 50%;
       }
 
       h3 {
         color: @mainColor;
         margin: 0;
+        text-overflow: ellipsis;
+        text-wrap: nowrap;
       }
 
       & > img {

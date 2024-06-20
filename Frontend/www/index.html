@@ -16,13 +16,14 @@
     <!--Bootsrap JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   </head>
+
   <body>
     <aside id="cart">
       <div class="cart-header">
-        <h3>Замовлення <span class="indicator">3</span></h3>
-        <a href="#" class="clear">Очистити замовлення</a>
+        <h3>Замовлення <span class="indicator" id="pizza-in-cart">3</span></h3>
+        <span class="clear" id="clear-cart">Очистити замовлення</span>
       </div>
-      <ul class="cart-list">
+      <ul class="cart-list" id="cart-list">
         <li>
           <div class="content">
             <h3>Імпреза (Мала)</h3>
@@ -96,7 +97,7 @@
       <div class="cart-footer">
         <div class="total">
           <span>Всього:</span>
-          <span>1670 грн</span>
+          <span id="total-price">1670 грн</span>
         </div>
         <button class="btn btn-regular">Замовити</button>
       </div>
@@ -122,12 +123,12 @@
       </header>
       <h1 class="main-label">Усі піци <span class="indicator">8</span></h1>
       <ul class="pizza-types">
-        <li class="active">Усі</li>
-        <li>М'ясні</li>
-        <li>З ананасами</li>
-        <li>З грибами</li>
-        <li>З морепродуктами</li>
-        <li>Вега</li>
+        <li class="active" data-filter="all">Усі</li>
+        <li data-filter="meat">М'ясні</li>
+        <li data-filter="pineapple">З ананасами</li>
+        <li data-filter="mushroom">З грибами</li>
+        <li data-filter="ocean">З морепродуктами</li>
+        <li data-filter="vegan">Вега</li>
       </ul>
       <div class="pizza-container">
         <div class="pizza-row" id="pizza_list">
@@ -421,6 +422,6 @@
     <aside class="cart-fake"></aside>
 
     <!--Own JavaScript -->
-    <!--<script type="text/javascript"  src="assets/js/main.js"> </script>-->
+    <script type="text/javascript" src="assets/js/main.js"></script>
   </body>
 </html>
