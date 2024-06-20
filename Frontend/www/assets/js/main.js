@@ -188,22 +188,27 @@ exports.PizzaMenu_OneItem = ejs.compile("<%\n\nfunction getIngredientsArray(pizz
 
 exports.PizzaCart_OneItem = ejs.compile("<li>\n  <div class=\"content\">\n    <h3>\n      <%= pizza.title %> <%= size === 'small_size' ? '(Маленька)' : '(Велика)'\n      %>\n    </h3>\n    <div class=\"pizza-info\">\n      <div class=\"measurment\">\n        <img src=\"assets/images/size-icon.svg\" alt=\"size\" />\n        <span><%= pizza[size].size %></span>\n      </div>\n      <div class=\"measurment\">\n        <img src=\"assets/images/weight.svg\" alt=\"size\" />\n        <span><%= pizza[size].weight %></span>\n      </div>\n    </div>\n    <div class=\"controls\">\n      <span><%= pizza[size].price %> грн</span>\n      <button class=\"btn btn-danger btn-round minus\">-</button>\n      <span><%= quantity %></span>\n      <button class=\"btn btn-success btn-round plus\">+</button>\n      <button class=\"btn btn-round remove\">x</button>\n    </div>\n  </div>\n  <img src=\"<%= pizza.icon %>\" alt=\"pizza\" />\n</li>\n");
 
-},{"ejs":7}],3:[function(require,module,exports){
+},{"ejs":8}],3:[function(require,module,exports){
 /**
  * Created by chaika on 25.01.16.
  */
 
-document.addEventListener("DOMContentLoaded", (event) => {
-    //This code will execute when the page is ready
-    const PizzaMenu = require('./pizza/PizzaMenu');
-    const PizzaCart = require('./pizza/PizzaCart');
-    const Pizza_List = require('./Pizza_List');
+document.addEventListener('DOMContentLoaded', (event) => {
+  //This code will execute when the page is ready
+  const PizzaMenu = require('./pizza/PizzaMenu');
+  const PizzaCart = require('./pizza/PizzaCart');
+  const Pizza_List = require('./Pizza_List');
+  const Stats = require('./statistics');
 
+  if (document.getElementById('wdr-component')) {
+    Stats.initData();
+  } else {
     PizzaCart.initialiseCart();
-    PizzaMenu.initialiseMenu();  
+    PizzaMenu.initialiseMenu();
+  }
 });
 
-},{"./Pizza_List":1,"./pizza/PizzaCart":4,"./pizza/PizzaMenu":5}],4:[function(require,module,exports){
+},{"./Pizza_List":1,"./pizza/PizzaCart":4,"./pizza/PizzaMenu":5,"./statistics":6}],4:[function(require,module,exports){
 /**
  * Created by chaika on 02.02.16.
  */
@@ -449,8 +454,96 @@ exports.filterPizza = filterPizza;
 exports.initialiseMenu = initialiseMenu;
 
 },{"../Pizza_List":1,"../Templates":2,"./PizzaCart":4}],6:[function(require,module,exports){
+const initData = () => {
+  const cart = JSON.parse(localStorage.getItem('cart'));
+  const data = [];
+  cart.forEach((element) => {
+    data.push({
+      type: element.pizza.type,
+      title: element.pizza.title,
+      quantity: element.quantity,
+      weight: element.pizza[element.size].weight,
+      price: element.pizza[element.size].price,
+      size: element.pizza[element.size].size,
+    });
+  });
+  //   const data = [
+  //     {
+  //       id: 2,
+  //       title: 'BBQ',
+  //       type: 'М’ясна піца',
+  //       size: 'small_size',
+  //       quantity: 2,
+  //       weight: 460,
+  //       price: 139,
+  //     },
+  //     {
+  //       id: 2,
+  //       title: 'BBQ',
+  //       type: 'М’ясна піца',
+  //       size: 'big_size',
+  //       quantity: 2,
+  //       weight: 840,
+  //       price: 199,
+  //     },
+  //     {
+  //       id: 6,
+  //       title: 'Россо Густо',
+  //       type: 'Морська піца',
+  //       size: 'big_size',
+  //       quantity: 2,
+  //       weight: 700,
+  //       price: 299,
+  //     },
+  //   ];
+
+  let pivot = new WebDataRocks({
+    container: '#wdr-component',
+    toolbar: true,
+    report: {
+      dataSource: {
+        data: data,
+      },
+      slice: {
+        rows: [
+          { uniqueName: 'type' },
+          { uniqueName: 'title' },
+          { uniqueName: 'size' },
+        ],
+        columns: [{ uniqueName: '[Measures]' }],
+        measures: [
+          {
+            uniqueName: 'quantity',
+            aggregation: 'sum',
+          },
+          {
+            uniqueName: 'weight',
+            aggregation: 'sum',
+          },
+          {
+            uniqueName: 'price',
+            aggregation: 'sum',
+          },
+          {
+            uniqueName: 'size',
+            aggregation: 'average',
+          },
+        ],
+      },
+      options: {
+        grid: {
+          showGrandTotals: 'columns',
+        },
+      },
+    },
+  });
+};
+
+exports.initData = initData;
 
 },{}],7:[function(require,module,exports){
+
+},{}],8:[function(require,module,exports){
 /*
  * EJS Embedded JavaScript templates
  * Copyright 2112 Matthew Eernisse (mde@fleegix.org)
@@ -1432,7 +1525,7 @@ if (typeof window != 'undefined') {
   window.ejs = exports;
 }
 
-},{"../package.json":9,"./utils":8,"fs":6,"path":10}],8:[function(require,module,exports){
+},{"../package.json":10,"./utils":9,"fs":7,"path":11}],9:[function(require,module,exports){
 /*
  * EJS Embedded JavaScript templates
  * Copyright 2112 Matthew Eernisse (mde@fleegix.org)
@@ -1601,7 +1694,7 @@ exports.cache = {
   }
 };
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 module.exports={
   "name": "ejs",
   "description": "Embedded JavaScript templates",
@@ -1640,7 +1733,7 @@ module.exports={
   }
 }
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -1946,7 +2039,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":11}],11:[function(require,module,exports){
+},{"_process":12}],12:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
